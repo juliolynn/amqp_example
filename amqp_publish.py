@@ -1,3 +1,4 @@
+from time import sleep
 from dotenv import dotenv_values
 import ssl
 import pika
@@ -24,4 +25,15 @@ channel = connection.channel()
 channel.queue_declare(queue='test')
 channel.basic_publish(exchange='', routing_key='test',
                       body=b'Test message.')
-connection.close()
+temp = 0
+
+try:
+    while True:
+        temp += 1
+        sleep(5)
+        channel.basic_publish(exchange='', routing_key='test',
+                        body=f'{temp}')
+except KeyboardInterrupt: 
+     print('Interrupted')
+finally:
+    connection.close()
